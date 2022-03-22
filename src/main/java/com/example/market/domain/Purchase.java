@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Purchase {
     private int purchaseId;
-    private String clienteId;
+    private String clientId;
     private LocalDateTime date;
     private String paymentMethod;
     private String comment;
@@ -13,7 +13,7 @@ public class Purchase {
     private String state;
 
 
-    private List<PurchaseItem> item;
+    private List<PurchaseItem> items;
 
     public int getPurchaseId() {
         return purchaseId;
@@ -22,15 +22,6 @@ public class Purchase {
     public void setPurchaseId(int purchaseId) {
         this.purchaseId = purchaseId;
     }
-
-    public String getClienteId() {
-        return clienteId;
-    }
-
-    public void setClienteId(String clienteId) {
-        this.clienteId = clienteId;
-    }
-
     public LocalDateTime getDate() {
         return date;
     }
@@ -63,11 +54,19 @@ public class Purchase {
         this.state = state;
     }
 
-    public List<PurchaseItem> getItem() {
-        return item;
+    public List<PurchaseItem> getItems() {
+        return items;
     }
 
-    public void setItem(List<PurchaseItem> item) {
-        this.item = item;
+    public void setItems(List<PurchaseItem> items) {
+        this.items = items;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }
