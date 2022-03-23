@@ -3,6 +3,7 @@ package com.example.market.persistence;
 import com.example.market.domain.*;
 import com.example.market.domain.repository.*;
 import com.example.market.persistence.crud.*;
+import com.example.market.persistence.entity.*;
 import com.example.market.persistence.mapper.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
@@ -20,16 +21,21 @@ public class CompraRepository implements PurchaseRepository {
 
     @Override
     public List<Purchase> getAll() {
-        return null;
+        return mapper.toPurchases((List<Compra>) compraCrudRepository.findAll());
     }
 
     @Override
     public Optional<List<Purchase>> getByCliente(String clientId) {
-        return Optional.empty();
+        return compraCrudRepository.findByIdCliente(clientId)
+                .map(compras -> mapper.toPurchases(compras));
     }
 
     @Override
     public Purchase save(Purchase purchase) {
-        return null;
+        Compra compra = mapper.toCompra(purchase);
+        compra.getProductos().forEach(producto -> producto.setCompra(compra));
+
+        return mapper.toPurchase(compraCrudRepository.save(compra));
     }
+
 }
