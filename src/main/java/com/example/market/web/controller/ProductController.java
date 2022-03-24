@@ -2,6 +2,7 @@ package com.example.market.web.controller;
 
 import com.example.market.domain.*;
 import com.example.market.domain.service.*;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +16,19 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/all")
+    @ApiOperation("Gets all products")
+    @ApiResponse(code = 200, message = "OK")
     public ResponseEntity<List<Product>> getAll(){
         return new ResponseEntity<>(productService.getAll(), HttpStatus.OK);
     }
 
+    @ApiOperation("Search a specific product with an ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable("id") int productId){
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found")
+    })
+    public ResponseEntity<Product> getProduct(@ApiParam(value = "The ID of the product", required = true, example = "1") @PathVariable("id") int productId){
         return productService.getProduct(productId)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -37,8 +45,21 @@ public class ProductController {
         return productService.getScarseProducts(quantity, active);
     }
 
+    @ApiOperation("Saves a product with the information required")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found")
+    })
     @PostMapping("/save")
-    public ResponseEntity<Product> save(@RequestBody Product product){
+    public ResponseEntity<Product> save(@ApiParam(value = "The product entity", required = true, example = "" +
+            "{\n" +
+            "  \"active\": 0,\n" +
+            "  \"category\": {\n" +
+            "    \"active\": 0,\n" +
+            "    \"category\": \"string\",\n" +
+            "    \"categoryId\": 0\n" +
+            "  }" +
+            "")  @RequestBody Product product){
         return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
     }
 
