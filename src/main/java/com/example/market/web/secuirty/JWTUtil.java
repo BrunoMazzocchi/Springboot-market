@@ -2,9 +2,11 @@ package com.example.market.web.secuirty;
 
 import io.jsonwebtoken.*;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.*;
 
 import java.util.*;
 
+@Component
 public class JWTUtil {
     private static final String KEY = "testing";
 
