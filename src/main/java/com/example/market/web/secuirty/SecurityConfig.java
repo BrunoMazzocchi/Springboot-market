@@ -1,6 +1,7 @@
 package com.example.market.web.secuirty;
 
 import com.example.market.domain.service.MarketUserDetailsService;
+import com.example.market.web.secuirty.filter.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.annotation.*;
@@ -8,6 +9,8 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.*;
 import org.springframework.security.config.annotation.web.builders.*;
 import org.springframework.security.config.annotation.web.configuration.*;
+import org.springframework.security.config.http.*;
+import org.springframework.security.web.authentication.*;
 import org.springframework.stereotype.*;
 
 
@@ -22,7 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(marketUserDetailsService);
     }
 
-
+    @Autowired
+    private JwtFilterRequest jwtFilterRequest;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -36,7 +40,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().antMatchers("/**/authenticate").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated().and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); //nuestra app no tiene sesion
+
+        http.addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

@@ -16,4 +16,19 @@ public class JWTUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10 ))
                 .signWith(SignatureAlgorithm.HS256, KEY).compact();
     }
+
+    public boolean validateToken(String token, UserDetails userDetails){
+        //Verificar que el JWT funciona y no ha expirado
+        return userDetails.getUsername().equals(extractUsername(token)) && !isTokenExpired(token); //Validamos que el username es el mismo y el token es valido
+    }
+    public String extractUsername(String token){
+        return getClaims(token).getSubject();
+    }
+    private boolean isTokenExpired(String token){
+        return getClaims(token).getExpiration().before(new Date());
+    }
+    //cuando se verifique que la firma es correcta, se obtiene los objetos de JWT
+    private Claims getClaims(String token){
+        return Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody();
+    }
 }
